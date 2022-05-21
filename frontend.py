@@ -1,3 +1,29 @@
-import PyQt5
+from PyQt5 import QtWidgets
+from PyQt5.QtWidgets import QApplication, QMainWindow
 
-#Your code part
+import sys
+
+def application():
+    app = QApplication(sys.argv)
+    window = QMainWindow()
+
+    window.setWindowTitle("program")
+    window.setGeometry(300, 250, 350, 200)
+
+    button = QtWidgets.QPushButton(window)
+    button.move(70, 150)
+    button.setText("Button")
+    button.setFixedWidth(200)
+
+    lable = QtWidgets.QLineEdit(window)
+    lable.setText("enter the text")
+    lable.setFixedWidth(350)
+
+
+
+    window.show()
+    sys.exit(app.exec_())
+
+
+if __name__ == "__main__":
+    application()

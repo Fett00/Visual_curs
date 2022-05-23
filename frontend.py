@@ -24,6 +24,12 @@ def application():
     window.show()
     sys.exit(app.exec_())
 
+    #Структура UI построчно
+    # Текстовое поле + кнопка
+    # Древовидное поле QTreeWidget
+    # Текстовое поле + кнопка
+    # Кнопка на всю ширину
+
 
 if __name__ == "__main__":
     application()

@@ -5,6 +5,8 @@ class ProjectCoordinator:
 
     def __init__(self):
         pass
+
+    backend_object = backend.AppBackend()
     
     @staticmethod
     def createEntryPoint():

@@ -9,18 +9,6 @@ from influxdb_client.client.write_api import SYNCHRONOUS
 
 #my code part
 
-class AppBackend:   
-
-    def __init__(self):
-        pass
-
-
-    def get_data_and_convert_to_json(from_url:str):
-
-        str_json_data = NetworkWorker.request_json_data("https://www.themealdb.com/api/json/v1/1/categories.php")
-        json_data = json.loads(str_json_data)
-        print(json_data)
-
 
 
 
@@ -56,19 +44,69 @@ class TSBDWorker:
 
     #url  "http://192.168.1.46:8086"
 
-    def __init__(self, ip_address):
+    def sendDataToTSDB(self, data:dict, in_measure: str = "default"):
 
-        self.ip_address = ip_address
+        import time
 
-    def sendDataToTSDB(to_url: str):
-
-        with InfluxDBClient(url= to_url, token= __token, org=org) as client:
+        with InfluxDBClient(url= self.__url, token= self.__token, org= self.__org) as client:
             
             with client.write_api(write_options= SYNCHRONOUS) as write_client:
-                
-                #data = Point("json")
-                write_client.write(__bucket, __org, data)
-            
+
+                for i in data:                                                  
+                        
+                    field = i
+                    value = data[i]
+                    #print(value)
+                    data = Point("json").measurement(in_measure).field(field, value)
+                    write_client.write(self.__bucket, self.__org, data)
+                    time.sleep(1)
+
+class AutoSender:
+    pass
+
+
+class AppBackend:
+
+
+    def __init__(self):
+        pass
+
+    tsdb_sender = TSBDWorker()#TSBDWorker(ip_address = "")   
+
+
+    def get_data_and_convert_to_json(self):
+
+        str_json_data = NetworkWorker.request_json_data("http://192.168.1.46:8001")
+        json_data = json.loads(str_json_data)
+        out = self.flatten_data(json_data)
+        return out
+        #print(json_data)
+
+    def flatten_data(self, y):
+        out = {}
+
+        def flatten(x, name=''):
+            if type(x) is dict:
+                for a in x:
+                    flatten(x[a], name + a + '_')
+            elif type(x) is list:
+                i = 0
+                for a in x:
+                    flatten(a, name + str(i) + '_')
+                    i += 1
+            else:
+                out[name[:-1]] = x
+
+        flatten(y)
+        return out
+    
+    def send_data_to_tsdb(self, data:dict, in_measure: str = "default"):
+        
+        self.tsdb_sender.sendDataToTSDB(data, in_measure= in_measure)
+
 
 if __name__ == "__main__":
-    AppBackend()
+    a = AppBackend()
+    json_data = a.get_data_and_convert_to_json()
+    a.send_data_to_tsdb(json_data)
+    

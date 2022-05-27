@@ -1,18 +1,16 @@
 import sys
 import json
+import backend
 
-from PyQt5.QtWidgets import (
-    QApplication,
-    QCheckBox,
-    QTabWidget,
-    QVBoxLayout,
-    QWidget, QFormLayout, QLineEdit, QPushButton, QHBoxLayout, QTreeWidget,
-)
+from PyQt5.QtWidgets import *
+from PyQt5.QtCore import Qt
 
-from main import ViewTree
+#from main import ViewTree
 
 class ViewTree(QTreeWidget):
-    def __init__(self, value):
+
+
+    def __init__(self, value = "{\"123\" = \"13\"}"):
 
         super().__init__()
         def fill_item(item, value):
@@ -38,7 +36,12 @@ class ViewTree(QTreeWidget):
 
 
 class Window(QWidget):
-    def __init__(self):
+
+    def __init__(self, backend: backend.AppBackend = backend.AppBackend()):
+
+        #backend class
+        self.app_backend = backend
+
         super().__init__()
         self.setWindowTitle("Kursach")
         self.resize(339, 306)
@@ -66,10 +69,10 @@ class Window(QWidget):
 
         # TreeWidjet
 
-        json_file = open("example.json", "r")
-        file = json.load(json_file)
-
-        formLayout1.addWidget(ViewTree(file))
+        #json_file = open("example.json", "r")
+        ##TEMP##
+        #file = self.app_backend.get_data_and_convert_to_json()
+        formLayout1.addWidget(ViewTree())
 
         # box3
         horizlayout2.addWidget(QLineEdit())

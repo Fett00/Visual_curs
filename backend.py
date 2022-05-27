@@ -61,12 +61,11 @@ class TSBDWorker:
                     write_client.write(self.__bucket, self.__org, data)
                     time.sleep(1)
 
-class AutoSender:
-    pass
-
 
 class AppBackend:
 
+    __json_ip = ""
+    __tsdb_ip = ""
 
     def __init__(self):
         pass
@@ -103,7 +102,14 @@ class AppBackend:
     def send_data_to_tsdb(self, data:dict, in_measure: str = "default"):
         
         self.tsdb_sender.sendDataToTSDB(data, in_measure= in_measure)
+    
+    #def auto_sender(self, timeout=1):
 
+    def enter_tsdb_ip(self, ip_address):
+        self.__tsdb_ip = ip_address
+    
+    def enter_json_ip(self, ip_address):
+        self.__json_ip = ip_address
 
 if __name__ == "__main__":
     a = AppBackend()

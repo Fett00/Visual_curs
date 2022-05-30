@@ -106,7 +106,7 @@ class AppBackend:
     
     def send_data_to_tsdb(self, data:dict, url:str, in_measure: str = "default"):
         
-        self.tsdb_sender.sendDataToTSDB(data, url=url, in_measure= in_measure)
+        self.tsdb_sender.sendDataToTSDB(data, tsdb_url=url, in_measure= in_measure)
     
     def auto_sender(self, data_key_list:list, timeout=5):
         

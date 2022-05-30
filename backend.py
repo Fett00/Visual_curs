@@ -44,11 +44,11 @@ class TSBDWorker:
 
     #url  "http://192.168.1.46:8086"
 
-    def sendDataToTSDB(self, json_data:dict, url:str, in_measure: str = "default"):
+    def sendDataToTSDB(self, json_data:dict, tsdb_url:str, in_measure: str = "default"):
 
         import time
 
-        with InfluxDBClient(url= url, token= self.__token, org= self.__org) as client:
+        with InfluxDBClient(url= tsdb_url, token= self.__token, org= self.__org) as client:
             
             with client.write_api(write_options= SYNCHRONOUS) as write_client:
 
@@ -113,7 +113,7 @@ class AppBackend:
         import time
 
         if self.json_ip == "" or self.tsdb_ip == "":
-            return False
+            print("Failed ip address is missing")
 
         while True:
 

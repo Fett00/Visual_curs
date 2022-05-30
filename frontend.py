@@ -26,11 +26,9 @@ class Window(QWidget):
         self.buttonOne = QPushButton("Ok")
         self.button2 = QPushButton("Ok")
         self.button3 = QPushButton("Start")
+        self.button3.setDisabled(True)
         self.textField = QLineEdit()
         self.textField2 = QLineEdit()
-
-        #backend class
-        #self.app_backend = backend
 
         super().__init__()
         self.setWindowTitle("Kursach")
@@ -59,23 +57,13 @@ class Window(QWidget):
 
         # action btn1
         self.buttonOne.clicked.connect(self.on_ip_json)  # соединение сигнала и слота (сигнал clicked и слот on_ip_json)
-        # json_file = open("example.json", "r")
-        ##TEMP##
-        # file = self.app_backend.get_data_and_convert_to_json()
 
-        # TableWidjet
 
         self.tableWidjet.setColumnCount(3)
         self.tableWidjet.setRowCount(0)
 
         self.tableWidjet.setHorizontalHeaderLabels(['', 'Key', 'Value'])
-        #tableWidjet.setItem(0, 1, QTableWidgetItem("Text1"))
-        #tableWidjet.setItem(0, 2, QTableWidgetItem("Text3"))
-        #tableWidjet.setItem(1, 2, QTableWidgetItem("Text4"))
-        #tableWidjet.setItem(1, 1, QTableWidgetItem("Text2"))
 
-        #self.tableWidjet.setCellWidget(0, 0, QCheckBox(""))
-        #tableWidjet.setCellWidget(1, 0, QCheckBox("Check2"))
 
         formLayout1.addWidget(self.tableWidjet)
 
@@ -111,10 +99,8 @@ class Window(QWidget):
 
         try:
             json_ip = self.textField.text()
-            #tsdb_ip = input("Enter Tsdb Ip: ")
             requests.get(json_ip)
             self.backend_app.enter_json_ip(json_ip)
-            #backend.enter_tsdb_ip(tsdb_ip)
 
             data = self.backend_app.get_data_and_convert_to_json(self.backend_app.json_ip)
 
@@ -158,7 +144,8 @@ class Window(QWidget):
         try:
             tsdb_ip = self.textField.text()
             self.backend_app.enter_tsdb_ip(tsdb_ip)
-
+            self.button3.setDisabled(False)
+            
             msg = QMessageBox()
             msg.setIcon(QMessageBox.Information)
             msg.setText("TSDB IP Address is correct")
@@ -185,7 +172,7 @@ class Window(QWidget):
                 table_item: QTableWidgetItem =  self.tableWidjet.item(i, 0)
                 if table_item.checkState() > 0:
                     data_key_list.append(table_item.text())
-        
+
             self.backend_app.auto_sender(data_key_list)
 
         except:
